@@ -8,6 +8,8 @@ const initialState = {
             title: "Grand Palace Hotel",
             description: "Enjoy a luxurious stay with spacious rooms and elegant interiors. Experience premium facilities and excellent hospitality.",
             location: "Chennai, Tamil Nadu",
+            latitude: 13.0827,
+            longitude: 80.2707,
             price: 3500,
             rating: 4.8,
             available: true,
@@ -19,6 +21,8 @@ const initialState = {
             title: "Ocean View Resort",
             description: "Relax in comfortable rooms with modern facilities and friendly service. Perfect for families and budget travelers.",
             location: "Rameswaram, Tamil Nadu",
+            latitude: 9.2881,
+            longitude: 79.3129,
             price: 4500,
             rating: 4.5,
             available: true,
@@ -30,6 +34,8 @@ const initialState = {
             title: "Royal Garden Hotel",
             description: "Escape into nature with beautiful gardens and peaceful surroundings. Enjoy a refreshing stay with comfortable accommodation.",
             location: "Madurai, Tamil Nadu",
+            latitude: 9.9252,
+            longitude: 78.1198,
             price: 2500,
             rating: 3.8,
             available: false,
@@ -41,6 +47,8 @@ const initialState = {
             title: "Mountain Paradise",
             description: "Discover traditional elegance with beautifully decorated interiors. Enjoy warm hospitality and a memorable stay.",
             location: "Kodaikanal, Tamil Nadu",
+            latitude: 10.2381,
+            longitude: 77.4892,
             price: 5000,
             rating: 4.9,
             available: true,
@@ -52,6 +60,8 @@ const initialState = {
             title: "City Comfort Inn",
             description: "Experience spacious suites with cozy interiors and comfortable beds. Perfect for a peaceful and relaxing getaway.",
             location: "Trichy, Tamil Nadu",
+            latitude: 10.7905,
+            longitude: 78.7047,
             price: 1800,
             rating: 3.5,
             available: true,
@@ -63,6 +73,8 @@ const initialState = {
             title: "Sunrise Luxury Resort",
             description: "Enjoy an affordable stay with clean and well-maintained rooms. Experience quality service and convenient facilities.",
             location: "Coimbatore, Tamil Nadu",
+            latitude: 11.0168,
+            longitude: 76.9558,
             price: 6000,
             rating: 4.7,
             available: false,
@@ -78,12 +90,10 @@ const hotelSlice = createSlice({
 
     reducers: {
 
-        // Add new hotel
         addHotel: function (state, action) {
             state.hotelList.push(action.payload);
         },
 
-        // Update hotel
         updateHotel: function (state, action) {
             const updatedHotel = action.payload;
 
@@ -98,7 +108,6 @@ const hotelSlice = createSlice({
             }
         },
 
-        // Delete hotel
         deleteHotel: function (state, action) {
             state.hotelList = state.hotelList.filter(
                 function (hotel) {

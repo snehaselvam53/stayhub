@@ -19,26 +19,31 @@ function HotelListPage({ lastAddedHotelId }) {
         (state) => state.hotels.hotelList
     );
 
+    // Filter input states
     const [location, setLocation] = useState("");
     const [minimumPrice, setMinimumPrice] = useState("");
     const [roomType, setRoomType] = useState("");
+    const [hotelName, setHotelName] = useState("");
+    const [latitude, setLatitude] = useState("");
+    const [longitude, setLongitude] = useState("");
 
     const [showFilter, setShowFilter] = useState(false);
 
+    // Applied filters
     const [appliedFilters, setAppliedFilters] = useState({
         location: "",
         minimumPrice: "",
-        roomType: ""
+        roomType: "",
+        hotelName: "",
+        latitude: "",
+        longitude: ""
     });
 
     const [currentPage, setCurrentPage] = useState(1);
-
     const hotelsPerPage = 6;
 
     const [selectedHotelId, setSelectedHotelId] = useState(null);
     const [showDelete, setShowDelete] = useState(false);
-
-    // Success message state
     const [showSuccess, setShowSuccess] = useState(false);
 
     const locations = [
@@ -56,16 +61,33 @@ function HotelListPage({ lastAddedHotelId }) {
 
         const matchesMinimumPrice =
             appliedFilters.minimumPrice === "" ||
-            hotel.price >= Number(appliedFilters.minimumPrice);
+            Number(hotel.price) >= Number(appliedFilters.minimumPrice);
 
         const matchesRoomType =
             appliedFilters.roomType === "" ||
             hotel.roomType === appliedFilters.roomType;
 
+        const matchesHotelName =
+            appliedFilters.hotelName === "" ||
+            hotel.title.toLowerCase().includes(
+                appliedFilters.hotelName.toLowerCase().trim()
+            );
+
+        const matchesLatitude =
+            appliedFilters.latitude === "" ||
+            Number(hotel.latitude) === Number(appliedFilters.latitude);
+
+        const matchesLongitude =
+            appliedFilters.longitude === "" ||
+            Number(hotel.longitude) === Number(appliedFilters.longitude);
+
         return (
             matchesLocation &&
             matchesMinimumPrice &&
-            matchesRoomType
+            matchesRoomType &&
+            matchesHotelName &&
+            matchesLatitude &&
+            matchesLongitude
         );
     });
 
@@ -74,7 +96,7 @@ function HotelListPage({ lastAddedHotelId }) {
         filteredHotels.length / hotelsPerPage
     );
 
-    // After adding a hotel, go to the page containing it
+    // After adding a hotel, go to its page
     useEffect(() => {
 
         if (!lastAddedHotelId) {
@@ -90,11 +112,17 @@ function HotelListPage({ lastAddedHotelId }) {
             setLocation("");
             setMinimumPrice("");
             setRoomType("");
+            setHotelName("");
+            setLatitude("");
+            setLongitude("");
 
             setAppliedFilters({
                 location: "",
                 minimumPrice: "",
-                roomType: ""
+                roomType: "",
+                hotelName: "",
+                latitude: "",
+                longitude: ""
             });
 
             setCurrentPage(
@@ -104,7 +132,7 @@ function HotelListPage({ lastAddedHotelId }) {
 
     }, [lastAddedHotelId, hotelList]);
 
-    // Keep current page valid after deleting/filtering
+    // Keep current page valid
     useEffect(() => {
         if (currentPage > totalPages && totalPages > 0) {
             setCurrentPage(totalPages);
@@ -118,28 +146,39 @@ function HotelListPage({ lastAddedHotelId }) {
         startIndex + hotelsPerPage
     );
 
+    // Apply filters
     function handleApplyFilter() {
 
         setAppliedFilters({
             location,
             minimumPrice,
-            roomType
+            roomType,
+            hotelName,
+            latitude,
+            longitude
         });
 
         setCurrentPage(1);
         setShowFilter(false);
     }
 
+    // Clear filters
     function handleClearFilter() {
 
         setLocation("");
         setMinimumPrice("");
         setRoomType("");
+        setHotelName("");
+        setLatitude("");
+        setLongitude("");
 
         setAppliedFilters({
             location: "",
             minimumPrice: "",
-            roomType: ""
+            roomType: "",
+            hotelName: "",
+            latitude: "",
+            longitude: ""
         });
 
         setCurrentPage(1);
@@ -162,7 +201,6 @@ function HotelListPage({ lastAddedHotelId }) {
         setShowDelete(false);
         setSelectedHotelId(null);
 
-        // Show success message
         setShowSuccess(true);
 
         setTimeout(() => {
@@ -186,6 +224,13 @@ function HotelListPage({ lastAddedHotelId }) {
                     >
                         Filter
                     </button>
+                    <button
+                       type="button"
+                       className="clear-filter-button"
+                       onClick={handleClearFilter}
+                    >
+                       Clear Filter
+                    </button>
 
                     {showFilter && (
                         <div className="filter-panel">
@@ -194,20 +239,22 @@ function HotelListPage({ lastAddedHotelId }) {
                                 location={location}
                                 minimumPrice={minimumPrice}
                                 roomType={roomType}
+                                hotelName={hotelName}
+                                latitude={latitude}
+                                longitude={longitude}
                                 locations={locations}
                                 onLocationChange={setLocation}
                                 onMinimumPriceChange={setMinimumPrice}
                                 onRoomTypeChange={setRoomType}
+                                onHotelNameChange={setHotelName}
+                                onLatitudeChange={setLatitude}
+                                onLongitudeChange={setLongitude}
                             />
 
                             <div className="filter-actions">
 
                                 <button onClick={handleApplyFilter}>
                                     Apply Filter
-                                </button>
-
-                                <button onClick={handleClearFilter}>
-                                    Clear Filter
                                 </button>
 
                             </div>
@@ -245,7 +292,7 @@ function HotelListPage({ lastAddedHotelId }) {
 
             </div>
 
-            {/* Previous and Next */}
+            {/* Pagination */}
 
             {filteredHotels.length > 0 && (
                 <Pagination

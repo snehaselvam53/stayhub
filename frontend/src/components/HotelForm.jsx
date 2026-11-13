@@ -6,6 +6,8 @@ function HotelForm(props) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [location, setLocation] = useState("");
+    const [latitude, setLatitude] = useState("");
+    const [longitude, setLongitude] = useState("");
     const [price, setPrice] = useState("");
     const [rating, setRating] = useState("4");
     const [available, setAvailable] = useState("true");
@@ -18,6 +20,8 @@ function HotelForm(props) {
             setTitle(props.initialData.title || "");
             setDescription(props.initialData.description || "");
             setLocation(props.initialData.location || "");
+            setLatitude(props.initialData.latitude ?? "");
+            setLongitude(props.initialData.longitude ?? "");
             setPrice(props.initialData.price || "");
             setRating(String(props.initialData.rating || "4"));
             setAvailable(String(props.initialData.available));
@@ -52,6 +56,8 @@ function HotelForm(props) {
             title: title,
             description: description,
             location: location,
+            latitude: latitude === "" ? null : Number(latitude),
+            longitude: longitude === "" ? null : Number(longitude),
             price: Number(price),
             rating: Number(rating),
             available: available === "true",
@@ -72,60 +78,67 @@ function HotelForm(props) {
             <form onSubmit={handleSubmit}>
 
                 <label>Hotel Name</label>
-
                 <input
                     type="text"
                     placeholder="Enter hotel name"
                     value={title}
-                    onChange={function (event) {
-                        setTitle(event.target.value);
-                    }}
+                    onChange={(event) => setTitle(event.target.value)}
                     required
                 />
 
                 <label>Description</label>
-
                 <textarea
                     placeholder="Enter hotel description"
                     value={description}
-                    onChange={function (event) {
-                        setDescription(event.target.value);
-                    }}
+                    onChange={(event) => setDescription(event.target.value)}
                     required
                 />
 
                 <label>Location</label>
-
                 <input
                     type="text"
                     placeholder="Enter hotel location"
                     value={location}
-                    onChange={function (event) {
-                        setLocation(event.target.value);
-                    }}
+                    onChange={(event) => setLocation(event.target.value)}
                     required
                 />
 
-                <label>Price Per Night (₹)</label>
+                <label>Latitude</label>
+                <input
+                    type="number"
+                    step="any"
+                    placeholder="Enter latitude"
+                    value={latitude}
+                    onChange={(event) => setLatitude(event.target.value)}
+                    min="-90"
+                    max="90"
+                />
 
+                <label>Longitude</label>
+                <input
+                    type="number"
+                    step="any"
+                    placeholder="Enter longitude"
+                    value={longitude}
+                    onChange={(event) => setLongitude(event.target.value)}
+                    min="-180"
+                    max="180"
+                />
+
+                <label>Price Per Night (₹)</label>
                 <input
                     type="number"
                     placeholder="Enter price"
                     value={price}
-                    onChange={function (event) {
-                        setPrice(event.target.value);
-                    }}
+                    onChange={(event) => setPrice(event.target.value)}
                     min="1"
                     required
                 />
 
                 <label>Hotel Rating</label>
-
                 <select
                     value={rating}
-                    onChange={function (event) {
-                        setRating(event.target.value);
-                    }}
+                    onChange={(event) => setRating(event.target.value)}
                     required
                 >
                     <option value="1">1 Star</option>
@@ -136,19 +149,15 @@ function HotelForm(props) {
                 </select>
 
                 <label>Availability</label>
-
                 <select
                     value={available}
-                    onChange={function (event) {
-                        setAvailable(event.target.value);
-                    }}
+                    onChange={(event) => setAvailable(event.target.value)}
                 >
                     <option value="true">Available</option>
                     <option value="false">Not Available</option>
                 </select>
 
                 <label>Upload Hotel Image</label>
-
                 <input
                     type="file"
                     accept="image/*"
@@ -159,7 +168,6 @@ function HotelForm(props) {
                 {imagePreview && (
                     <div className="image-preview">
                         <h3>Image Preview</h3>
-
                         <img
                             src={imagePreview}
                             alt="Hotel preview"
